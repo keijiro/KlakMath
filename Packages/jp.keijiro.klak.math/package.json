@@ -1,0 +1,13 @@
+{
+    "author": "Keijiro Takahashi",
+    "dependencies": { "com.unity.mathematics": "1.2.1" },
+    "description": "Extension library for Unity Mathematics.",
+    "displayName": "KlakMath",
+    "keywords": [ "unity" ],
+    "license": "Unlicense",
+    "name": "jp.keijiro.klak.math",
+    "repository": "github:keijiro/KlakMath",
+    "unity": "2020.2",
+    "unityRelease": "0f1", 
+    "version": "1.0.2"
+}
