@@ -1,4 +1,4 @@
-Math Extension Library
-======================
+KlakMath
+========
 
-An extension library for Unity Mathematics Library.
+An extension library for Unity Mathematics.
