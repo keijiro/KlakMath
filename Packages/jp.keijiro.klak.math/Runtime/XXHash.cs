@@ -192,6 +192,36 @@ namespace Klak.Math
             return Float4(data) * (max - min) + min;
         }
 
+        // Direction (float3 on unit sphere)
+
+        public float3 Direction(uint data)
+        {
+            var phi = Float(math.PI * 2, data);
+            var z = Float(-1, 1, data + 0x10000000);
+            var w = math.sqrt(1 - z * z);
+            return math.float3(math.cos(phi) * w, math.sin(phi) * w, z);
+        }
+
+        // Inside unit sphere
+
+        public float3 InSphere(uint data)
+        {
+            var l = Float(0, 1, data + 0x20000000);
+            return Direction(data) * math.pow(l, 1.0f / 3);
+        }
+
+        // Rotation
+
+        public quaternion Rotation(uint data)
+        {
+            var u1 = Float(data);
+            var r1 = Float(math.PI * 2, data + 0x10000000);
+            var r2 = Float(math.PI * 2, data + 0x20000000);
+            var v = math.float4(math.sqrt(1 - u1) * MathUtil.SinCos(r1),
+                                math.sqrt(    u1) * MathUtil.SinCos(r2));
+            return math.quaternion(math.select(v, -v, v.w < 0));
+        }
+
         #endregion
 
         #region Public class members
