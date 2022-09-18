@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.unity.mathematics": {
-      "version": "1.2.1",
+      "version": "1.2.6",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
@@ -12,8 +12,15 @@
       "depth": 0,
       "source": "embedded",
       "dependencies": {
-        "com.unity.mathematics": "1.2.1"
+        "com.unity.mathematics": "1.2.6"
       }
+    },
+    "jp.keijiro.test-assets": {
+      "version": "1.0.1",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://registry.npmjs.com"
     }
   }
 }

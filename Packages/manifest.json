@@ -1,4 +1,14 @@
 {
   "dependencies": {
-  }
+    "jp.keijiro.test-assets": "1.0.1"
+  },
+  "scopedRegistries": [
+    {
+      "name": "Keijiro",
+      "url": "https://registry.npmjs.com",
+      "scopes": [
+        "jp.keijiro"
+      ]
+    }
+  ]
 }
