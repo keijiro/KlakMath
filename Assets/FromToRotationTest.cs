@@ -8,7 +8,5 @@ sealed class FromToRotationTest : MonoBehaviour
     [SerializeField] Vector3 _fromVector = Vector3.up;
 
     void Update()
-      => transform.localRotation =
-           mathx.FromToRotation(_fromVector,
-                                _target.localPosition - transform.localPosition);
+      => transform.localRotation = Rotation.FromTo(_fromVector, _target.localPosition - transform.localPosition);
 }

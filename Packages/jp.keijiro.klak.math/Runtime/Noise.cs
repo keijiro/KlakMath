@@ -4,7 +4,7 @@ using Unity.Mathematics;
 
 namespace Klak.Math {
 
-public static class noisex
+public static class Noise
 {
     #region FBM functions
 
