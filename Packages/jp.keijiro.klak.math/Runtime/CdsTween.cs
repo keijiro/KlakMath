@@ -92,4 +92,4 @@ public static class CdsTween
     #endregion
 }
 
-} // namespace Klak.Math2
+} // namespace Klak.Math

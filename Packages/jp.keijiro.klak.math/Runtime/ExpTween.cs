@@ -57,4 +57,4 @@ public static class ExpTween
     #endregion
 }
 
-} // namespace Klak.Math2
+} // namespace Klak.Math

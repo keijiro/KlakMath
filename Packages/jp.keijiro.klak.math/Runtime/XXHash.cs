@@ -198,4 +198,4 @@ public readonly struct XXHash
     #endregion
 }
 
-} // namespace Klak.Math2
+} // namespace Klak.Math
