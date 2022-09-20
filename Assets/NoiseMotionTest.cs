@@ -2,7 +2,7 @@ using UnityEngine;
 using Unity.Mathematics;
 using Klak.Math;
 
-sealed class NoiseTest : MonoBehaviour
+sealed class NoiseMotionTest : MonoBehaviour
 {
     [SerializeField] uint _seed = 100;
     [SerializeField] float _frequency = 1;

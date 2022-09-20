@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.unity.burst": "1.8.0-pre.2",
     "jp.keijiro.test-assets": "1.0.1"
   },
   "scopedRegistries": [

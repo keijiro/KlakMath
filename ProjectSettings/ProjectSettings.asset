@@ -611,7 +611,8 @@ PlayerSettings:
   webGLLinkerTarget: 1
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    Standalone: UNITY_BURST_EXPERIMENTAL_LOOP_INTRINSICS
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}
