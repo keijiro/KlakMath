@@ -68,9 +68,8 @@ sealed class NoiseTextureTest : MonoBehaviour
             var ny = frequency * y / resolution + offset;
             for (var x = 0; x < resolution; x++)
             {
-                Unity.Burst.CompilerServices.Loop.ExpectVectorized();
                 var nx = frequency * x / resolution;
-                var n = Noise.SimplexNoise(math.float2(nx, ny)) * 1.024782f;
+                var n = Noise.SimplexNoise(math.float2(nx, ny)) * 1.0474f;
                 var gray = (byte)(math.saturate(n / 2 + 0.5f) * 255);
                 raw[idx++] = new Color32(gray, gray, gray, 255);
             }
