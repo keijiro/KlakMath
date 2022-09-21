@@ -69,7 +69,7 @@ sealed class NoiseTextureTest : MonoBehaviour
             for (var x = 0; x < resolution; x++)
             {
                 var nx = frequency * x / resolution;
-                var n = Noise.SimplexNoise(math.float2(nx, ny)) * 1.0474f;
+                var n = Noise.SimplexNoise(math.float2(nx, ny)) * 1.047f;
                 var gray = (byte)(math.saturate(n / 2 + 0.5f) * 255);
                 raw[idx++] = new Color32(gray, gray, gray, 255);
             }
