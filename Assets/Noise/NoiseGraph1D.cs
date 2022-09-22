@@ -2,11 +2,11 @@ using UnityEngine;
 using Unity.Burst;
 using Klak.Math;
 using Klak.Util;
-using System.Linq;
 using System;
+using System.Linq;
 
 [BurstCompile]
-sealed class NoiseGraph : MonoBehaviour
+sealed class NoiseGraph1D : MonoBehaviour
 {
     [SerializeField] uint _seed = 100;
     [SerializeField] float _frequency = 1;
