@@ -12,7 +12,8 @@ sealed class NoiseMotion : MonoBehaviour
 
     void Update()
     {
-        var x = Time.time * _frequency;
+        var hash = new XXHash(_seed + 0x100000);
+        var x = (Time.time + 100) * _frequency * hash.Float3(0.95f, 1.05f, 0);
         transform.localPosition = Noise.Fractal3(x, _octaves, _seed * 2) * _radius;
         transform.localRotation = Noise.FractalRotation(x, _octaves, _angle, _seed * 2 + 1);
     }

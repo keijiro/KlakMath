@@ -1,4 +1,4 @@
-// Helper functions for noise generation
+// 1D gradient noise functions
 
 using Unity.Mathematics;
 
@@ -11,8 +11,6 @@ public static partial class Noise
     public static float Float(float p, uint seed)
     {
         var hash = new XXHash(seed);
-
-        p += hash.Float(-1000, 1000, 0x20000000);
 
         var i = (uint)((int)p + 0x10000000);
         var x = math.frac(p);
@@ -32,14 +30,12 @@ public static partial class Noise
 
     #region Vector generators
 
-    public static float2 Float2(float p, uint seed)
+    public static float2 Float2(float2 p, uint seed)
     {
         var hash = new XXHash(seed);
 
-        var p2 = p + hash.Float2(-1000, 1000, 0x20000000);
-
-        var i = (uint2)((int2)p2 + 0x10000000);
-        var x = math.frac(p2);
+        var i = (uint2)((int2)p + 0x10000000);
+        var x = math.frac(p);
 
         var x0 = x;
         x0 = 1 - x0 * x0;
@@ -56,14 +52,12 @@ public static partial class Noise
         return n * 2 * 32 / 27;
     }
 
-    public static float3 Float3(float p, uint seed)
+    public static float3 Float3(float3 p, uint seed)
     {
         var hash = new XXHash(seed);
 
-        var p2 = p + hash.Float3(-1000, 1000, 0x20000000);
-
-        var i = (uint3)((int3)p2 + 0x10000000);
-        var x = math.frac(p2);
+        var i = (uint3)((int3)p + 0x10000000);
+        var x = math.frac(p);
 
         var x0 = x;
         x0 = 1 - x0 * x0;
@@ -80,14 +74,12 @@ public static partial class Noise
         return n * 2 * 32 / 27;
     }
 
-    public static float4 Float4(float p, uint seed)
+    public static float4 Float4(float4 p, uint seed)
     {
         var hash = new XXHash(seed);
 
-        var p2 = p + hash.Float4(-1000, 1000, 0x20000000);
-
-        var i = (uint4)((int4)p2 + 0x10000000);
-        var x = math.frac(p2);
+        var i = (uint4)((int4)p + 0x10000000);
+        var x = math.frac(p);
 
         var x0 = x;
         x0 = 1 - x0 * x0;
@@ -121,10 +113,10 @@ public static partial class Noise
         return f;
     }
 
-    public static float2 Fractal2(float p, int octave, uint seed)
+    public static float2 Fractal2(float2 p, int octave, uint seed)
     {
         var f = (float2)0;
-        var w = 0.5f;
+        var w = 1.0f;
         for (var i = 0; i < octave; i++)
         {
             f += w * Float2(p, seed);
@@ -134,10 +126,10 @@ public static partial class Noise
         return f;
     }
 
-    public static float3 Fractal3(float p, int octave, uint seed)
+    public static float3 Fractal3(float3 p, int octave, uint seed)
     {
         var f = (float3)0;
-        var w = 0.5f;
+        var w = 1.0f;
         for (var i = 0; i < octave; i++)
         {
             f += w * Float3(p, seed);
@@ -147,10 +139,10 @@ public static partial class Noise
         return f;
     }
 
-    public static float4 Fractal4(float p, int octave, uint seed)
+    public static float4 Fractal4(float4 p, int octave, uint seed)
     {
         var f = (float4)0;
-        var w = 0.5f;
+        var w = 1.0f;
         for (var i = 0; i < octave; i++)
         {
             f += w * Float4(p, seed);
@@ -164,11 +156,11 @@ public static partial class Noise
 
     #region Quaternion generators
 
-    public static quaternion Rotation(float p, float3 angles, uint seed)
+    public static quaternion Rotation(float3 p, float3 angles, uint seed)
       => quaternion.EulerZXY(angles * Float3(p, seed));
 
     public static quaternion
-      FractalRotation(float p, int octave, float3 angles, uint seed)
+      FractalRotation(float3 p, int octave, float3 angles, uint seed)
       => quaternion.EulerZXY(angles * Fractal3(p, octave, seed));
 
     #endregion
