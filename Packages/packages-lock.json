@@ -24,6 +24,12 @@
         "com.unity.mathematics": "1.2.6"
       }
     },
+    "jp.keijiro.klak.util": {
+      "version": "file:jp.keijiro.klak.util",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "jp.keijiro.test-assets": {
       "version": "1.0.1",
       "depth": 0,

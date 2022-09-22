@@ -1,0 +1,13 @@
+{
+    "author": "Keijiro Takahashi",
+    "dependencies": { },
+    "description": "Yet another utility class library.",
+    "displayName": "KlakUtil",
+    "keywords": [ "unity" ],
+    "license": "Unlicense",
+    "name": "jp.keijiro.klak.util",
+    "repository": "github:keijiro/KlakUtil",
+    "unity": "2021.3",
+    "unityRelease": "0f1", 
+    "version": "1.0.0"
+}

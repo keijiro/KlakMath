@@ -1,8 +1,9 @@
 using UnityEngine;
 using Unity.Burst;
-using Unity.Collections;
 using Klak.Math;
+using Klak.Util;
 using System.Linq;
+using System;
 
 [BurstCompile]
 sealed class NoiseGraph : MonoBehaviour
@@ -14,51 +15,62 @@ sealed class NoiseGraph : MonoBehaviour
     [SerializeField] Material _material = null;
 
     Mesh _mesh;
-    NativeArray<Vector3> _vertices;
+    Vector3[] _vertices;
 
     void Start()
     {
-        _mesh = new Mesh();
-        _vertices = new NativeArray<Vector3>(_resolution, Allocator.Persistent);
+        _vertices = new Vector3[_resolution];
 
+        var indices = Enumerable.Range(0, _resolution).ToArray();
+
+        _mesh = new Mesh();
         _mesh.SetVertices(_vertices);
-        _mesh.SetIndices(Enumerable.Range(0, _resolution).ToArray(), MeshTopology.LineStrip, 0);
+        _mesh.SetIndices(indices, MeshTopology.LineStrip, 0);
         _mesh.bounds = new Bounds(Vector3.zero, Vector3.one);
     }
 
     void OnDestroy()
-      => _vertices.Dispose();
+      => _mesh = SafeObject.TryDestroy(_mesh);
 
     void Update()
     {
-        var slice = new NativeSlice<Vector3>(_vertices);
+        var span = new Span<Vector3>(_vertices).GetUntyped();
+        var t = Time.time;
+
         if (_octaves > 0)
-            UpdateVerticesFractal(ref slice, _frequency, _octaves, Time.time, _seed);
+            UpdateVerticesFractal(span, _frequency, _octaves, t, _seed);
         else
-            UpdateVertices(ref slice, _frequency, Time.time, _seed);
+            UpdateVertices(span, _frequency, t, _seed);
+
         _mesh.SetVertices(_vertices);
-        Graphics.RenderMesh(new RenderParams(_material), _mesh, 0, transform.localToWorldMatrix);
+
+        var rparams = new RenderParams(_material);
+        Graphics.RenderMesh(rparams, _mesh, 0, transform.localToWorldMatrix);
     }
 
     [BurstCompile]
-    static void UpdateVerticesFractal(ref NativeSlice<Vector3> buffer, float freq, uint octaves, float time, uint seed)
+    static void UpdateVerticesFractal
+      (in UntypedSpan buffer, float freq, uint octaves, float time, uint seed)
     {
-        for (var i = 0; i < buffer.Length; i++)
+        var span = buffer.GetTyped<Vector3>();
+        for (var i = 0; i < span.Length; i++)
         {
-            var x = i * 2.0f / (buffer.Length - 1) - 1;
+            var x = i * 2.0f / (span.Length - 1) - 1;
             var y = Noise.Fractal((x + time) * freq, (int)octaves, seed);
-            buffer[i] = new Vector3(x, y, 0);
+            span[i] = new Vector3(x, y, 0);
         }
     }
 
     [BurstCompile]
-    static void UpdateVertices(ref NativeSlice<Vector3> buffer, float freq, float time, uint seed)
+    static void UpdateVertices
+      (in UntypedSpan buffer, float freq, float time, uint seed)
     {
-        for (var i = 0; i < buffer.Length; i++)
+        var span = buffer.GetTyped<Vector3>();
+        for (var i = 0; i < span.Length; i++)
         {
-            var x = i * 2.0f / (buffer.Length - 1) - 1;
+            var x = i * 2.0f / (span.Length - 1) - 1;
             var y = Noise.Float((x + time) * freq, seed);
-            buffer[i] = new Vector3(x, y, 0);
+            span[i] = new Vector3(x, y, 0);
         }
     }
 }
