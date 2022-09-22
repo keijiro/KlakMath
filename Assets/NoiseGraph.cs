@@ -9,6 +9,7 @@ sealed class NoiseGraph : MonoBehaviour
 {
     [SerializeField] uint _seed = 100;
     [SerializeField] float _frequency = 1;
+    [SerializeField, Range(0, 10)] uint _octaves = 0;
     [SerializeField] int _resolution = 256;
     [SerializeField] Material _material = null;
 
@@ -31,9 +32,23 @@ sealed class NoiseGraph : MonoBehaviour
     void Update()
     {
         var slice = new NativeSlice<Vector3>(_vertices);
-        UpdateVertices(ref slice, _frequency, Time.time, _seed);
+        if (_octaves > 0)
+            UpdateVerticesFractal(ref slice, _frequency, _octaves, Time.time, _seed);
+        else
+            UpdateVertices(ref slice, _frequency, Time.time, _seed);
         _mesh.SetVertices(_vertices);
         Graphics.RenderMesh(new RenderParams(_material), _mesh, 0, transform.localToWorldMatrix);
+    }
+
+    [BurstCompile]
+    static void UpdateVerticesFractal(ref NativeSlice<Vector3> buffer, float freq, uint octaves, float time, uint seed)
+    {
+        for (var i = 0; i < buffer.Length; i++)
+        {
+            var x = i * 2.0f / (buffer.Length - 1) - 1;
+            var y = Noise.Fractal((x + time) * freq, (int)octaves, seed);
+            buffer[i] = new Vector3(x, y, 0);
+        }
     }
 
     [BurstCompile]

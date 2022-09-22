@@ -106,12 +106,12 @@ public static partial class Noise
 
     #endregion
 
-    #region Fractal noise (fBm)
+    #region Fractal noise
 
-    public static float FloatFbm(float p, int octave, uint seed)
+    public static float Fractal(float p, int octave, uint seed)
     {
         var f = 0.0f;
-        var w = 0.5f;
+        var w = 1.0f;
         for (var i = 0; i < octave; i++)
         {
             f += w * Float(p, seed);
@@ -121,7 +121,7 @@ public static partial class Noise
         return f;
     }
 
-    public static float2 Float2Fbm(float p, int octave, uint seed)
+    public static float2 Fractal2(float p, int octave, uint seed)
     {
         var f = (float2)0;
         var w = 0.5f;
@@ -134,7 +134,7 @@ public static partial class Noise
         return f;
     }
 
-    public static float3 Float3Fbm(float p, int octave, uint seed)
+    public static float3 Fractal3(float p, int octave, uint seed)
     {
         var f = (float3)0;
         var w = 0.5f;
@@ -147,7 +147,7 @@ public static partial class Noise
         return f;
     }
 
-    public static float4 Float4Fbm(float p, int octave, uint seed)
+    public static float4 Fractal4(float p, int octave, uint seed)
     {
         var f = (float4)0;
         var w = 0.5f;
@@ -168,8 +168,8 @@ public static partial class Noise
       => quaternion.EulerZXY(angles * Float3(p, seed));
 
     public static quaternion
-      RotationFbm(float p, int octave, float3 angles, uint seed)
-      => quaternion.EulerZXY(angles * Float3Fbm(p, octave, seed));
+      FractalRotation(float p, int octave, float3 angles, uint seed)
+      => quaternion.EulerZXY(angles * Fractal3(p, octave, seed));
 
     #endregion
 }
