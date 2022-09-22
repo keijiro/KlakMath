@@ -6,6 +6,28 @@ namespace Klak.Math {
 
 public static partial class Noise
 {
+    #region 1D gradient noise
+
+    public static float Float(float p, uint seed)
+    {
+        var hash = new XXHash(seed);
+
+        var i = (uint)((int)p + 0x10000000);
+        var x = math.frac(p);
+
+        var k = math.float2(x, 1 - x);
+        k = 1 - k * k;
+        k = k * k * k;
+
+        var g = math.float2(hash.Float(-1, 1, i    ),
+                            hash.Float(-1, 1, i + 1));
+
+        var n = math.dot(k * g, math.float2(x, x - 1));
+        return n * 2 * 32 / 27;
+    }
+
+    #endregion
+
     #region FBM functions
 
     public static float Fbm(float2 v, int octave)
