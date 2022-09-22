@@ -29,6 +29,69 @@ public readonly struct XXHash
     public uint UInt(uint min, uint max, uint data)
       => UInt(max - min, data) + min;
 
+    // uint2
+
+    public uint2 UInt2(uint2 data)
+      => CalculateHash(data, (uint2)Seed);
+
+    public uint2 UInt2(uint data)
+      => UInt2(math.uint2(data, data + 0x10000000));
+
+    public uint2 UInt2(uint max, uint2 data)
+      => math.select(0u, UInt2(data) % max, max > 0u);
+
+    public uint2 UInt2(uint max, uint data)
+      => math.select(0u, UInt2(data) % max, max > 0u);
+
+    public uint2 UInt2(uint min, uint max, uint2 data)
+      => UInt2(max - min, data) + min;
+
+    public uint2 UInt2(uint min, uint max, uint data)
+      => UInt2(max - min, data) + min;
+
+    // uint3
+
+    public uint3 UInt3(uint3 data)
+      => CalculateHash(data, (uint3)Seed);
+
+    public uint3 UInt3(uint data)
+      => UInt3(math.uint3(data, data + 0x10000000, data + 0x20000000));
+
+    public uint3 UInt3(uint max, uint3 data)
+      => math.select(0u, UInt3(data) % max, max > 0u);
+
+    public uint3 UInt3(uint max, uint data)
+      => math.select(0u, UInt3(data) % max, max > 0u);
+
+    public uint3 UInt3(uint min, uint max, uint3 data)
+      => UInt3(max - min, data) + min;
+
+    public uint3 UInt3(uint min, uint max, uint data)
+      => UInt3(max - min, data) + min;
+
+    // uint4
+
+    public uint4 UInt4(uint4 data)
+      => CalculateHash(data, (uint4)Seed);
+
+    public uint4 UInt4(uint data)
+      => UInt4(math.uint4(data,
+                          data + 0x10000000,
+                          data + 0x20000000,
+                          data + 0x30000000));
+
+    public uint4 UInt4(uint max, uint4 data)
+      => math.select(0u, UInt4(data) % max, max > 0u);
+
+    public uint4 UInt4(uint max, uint data)
+      => math.select(0u, UInt4(data) % max, max > 0u);
+
+    public uint4 UInt4(uint min, uint max, uint4 data)
+      => UInt4(max - min, data) + min;
+
+    public uint4 UInt4(uint min, uint max, uint data)
+      => UInt4(max - min, data) + min;
+
     // int
 
     public int Int(uint data)
@@ -43,34 +106,61 @@ public readonly struct XXHash
     // int2
 
     public int2 Int2(uint data)
-      => math.int2(Int(data), Int(data + 0x10000000));
+      => (int2)UInt2(data);
+
+    public int2 Int2(uint2 data)
+      => (int2)UInt2(data);
 
     public int2 Int2(int2 max, uint data)
+      => math.select(0, Int2(data) % max, max > 0);
+
+    public int2 Int2(int2 max, uint2 data)
       => math.select(0, Int2(data) % max, max > 0);
 
     public int2 Int2(int2 min, int2 max, uint data)
       => Int2(max - min, data) + min;
 
+    public int2 Int2(int2 min, int2 max, uint2 data)
+      => Int2(max - min, data) + min;
+
     // int3
 
     public int3 Int3(uint data)
-      => math.int3(Int2(data), Int(data + 0x20000000));
+      => (int3)UInt3(data);
+
+    public int3 Int3(uint3 data)
+      => (int3)UInt3(data);
 
     public int3 Int3(int3 max, uint data)
+      => math.select(0, Int3(data) % max, max > 0);
+
+    public int3 Int3(int3 max, uint3 data)
       => math.select(0, Int3(data) % max, max > 0);
 
     public int3 Int3(int3 min, int3 max, uint data)
       => Int3(max - min, data) + min;
 
+    public int3 Int3(int3 min, int3 max, uint3 data)
+      => Int3(max - min, data) + min;
+
     // int4
 
     public int4 Int4(uint data)
-      => math.int4(Int3(data), Int(data + 0x30000000));
+      => (int4)UInt4(data);
+
+    public int4 Int4(uint4 data)
+      => (int4)UInt4(data);
 
     public int4 Int4(int4 max, uint data)
       => math.select(0, Int4(data) % max, max > 0);
 
+    public int4 Int4(int4 max, uint4 data)
+      => math.select(0, Int4(data) % max, max > 0);
+
     public int4 Int4(int4 min, int4 max, uint data)
+      => Int4(max - min, data) + min;
+
+    public int4 Int4(int4 min, int4 max, uint4 data)
       => Int4(max - min, data) + min;
 
     // float
@@ -87,34 +177,61 @@ public readonly struct XXHash
     // float2
 
     public float2 Float2(uint data)
-      => math.float2(Float(data), Float(data + 0x10000000));
+      => (float2)UInt2(data) / (float)uint.MaxValue;
+
+    public float2 Float2(uint2 data)
+      => (float2)UInt2(data) / (float)uint.MaxValue;
 
     public float2 Float2(float2 max, uint data)
+      => Float2(data) * max;
+
+    public float2 Float2(float2 max, uint2 data)
       => Float2(data) * max;
 
     public float2 Float2(float2 min, float2 max, uint data)
       => Float2(data) * (max - min) + min;
 
+    public float2 Float2(float2 min, float2 max, uint2 data)
+      => Float2(data) * (max - min) + min;
+
     // float3
 
     public float3 Float3(uint data)
-      => math.float3(Float2(data), Float(data + 0x20000000));
+      => (float3)UInt3(data) / (float)uint.MaxValue;
+
+    public float3 Float3(uint3 data)
+      => (float3)UInt3(data) / (float)uint.MaxValue;
 
     public float3 Float3(float3 max, uint data)
+      => Float3(data) * max;
+
+    public float3 Float3(float3 max, uint3 data)
       => Float3(data) * max;
 
     public float3 Float3(float3 min, float3 max, uint data)
       => Float3(data) * (max - min) + min;
 
+    public float3 Float3(float3 min, float3 max, uint3 data)
+      => Float3(data) * (max - min) + min;
+
     // float4
 
     public float4 Float4(uint data)
-      => math.float4(Float3(data), Float(data + 0x30000000));
+      => (float4)UInt4(data) / (float)uint.MaxValue;
+
+    public float4 Float4(uint4 data)
+      => (float4)UInt4(data) / (float)uint.MaxValue;
 
     public float4 Float4(float4 max, uint data)
       => Float4(data) * max;
 
+    public float4 Float4(float4 max, uint4 data)
+      => Float4(data) * max;
+
     public float4 Float4(float4 min, float4 max, uint data)
+      => Float4(data) * (max - min) + min;
+
+    public float4 Float4(float4 min, float4 max, uint4 data)
       => Float4(data) * (max - min) + min;
 
     // On unit circle
@@ -168,7 +285,49 @@ public readonly struct XXHash
 
     static uint CalculateHash(uint data, uint seed)
     {
-        uint h32 = seed + PRIME32_5;
+        var h32 = seed + PRIME32_5;
+        h32 += 4U;
+        h32 += data * PRIME32_3;
+        h32 = rotl32(h32, 17) * PRIME32_4;
+        h32 ^= h32 >> 15;
+        h32 *= PRIME32_2;
+        h32 ^= h32 >> 13;
+        h32 *= PRIME32_3;
+        h32 ^= h32 >> 16;
+        return h32;
+    }
+
+    static uint2 CalculateHash(uint2 data, uint2 seed)
+    {
+        var h32 = seed + PRIME32_5;
+        h32 += 4U;
+        h32 += data * PRIME32_3;
+        h32 = rotl32(h32, 17) * PRIME32_4;
+        h32 ^= h32 >> 15;
+        h32 *= PRIME32_2;
+        h32 ^= h32 >> 13;
+        h32 *= PRIME32_3;
+        h32 ^= h32 >> 16;
+        return h32;
+    }
+
+    static uint3 CalculateHash(uint3 data, uint3 seed)
+    {
+        var h32 = seed + PRIME32_5;
+        h32 += 4U;
+        h32 += data * PRIME32_3;
+        h32 = rotl32(h32, 17) * PRIME32_4;
+        h32 ^= h32 >> 15;
+        h32 *= PRIME32_2;
+        h32 ^= h32 >> 13;
+        h32 *= PRIME32_3;
+        h32 ^= h32 >> 16;
+        return h32;
+    }
+
+    static uint4 CalculateHash(uint4 data, uint4 seed)
+    {
+        var h32 = seed + PRIME32_5;
         h32 += 4U;
         h32 += data * PRIME32_3;
         h32 = rotl32(h32, 17) * PRIME32_4;
@@ -192,8 +351,10 @@ public readonly struct XXHash
     const uint PRIME32_4 = 668265263U;
     const uint PRIME32_5 = 374761393U;
 
-    static uint rotl32(uint x, int r)
-      => (x << r) | (x >> 32 - r);
+    static uint  rotl32(uint  x, int r) => (x << r) | (x >> 32 - r);
+    static uint2 rotl32(uint2 x, int r) => (x << r) | (x >> 32 - r);
+    static uint3 rotl32(uint3 x, int r) => (x << r) | (x >> 32 - r);
+    static uint4 rotl32(uint4 x, int r) => (x << r) | (x >> 32 - r);
 
     #endregion
 }

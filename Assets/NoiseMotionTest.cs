@@ -12,7 +12,7 @@ sealed class NoiseMotionTest : MonoBehaviour
 
     void Update()
     {
-        var x = (float2)(Time.time * _frequency);
+        var x = Time.time * _frequency;
         transform.localPosition = Noise.Float3Fbm(x, _octaves, _seed * 2) * _radius;
         transform.localRotation = Noise.RotationFbm(x, _octaves, _angle, _seed * 2 + 1);
     }
