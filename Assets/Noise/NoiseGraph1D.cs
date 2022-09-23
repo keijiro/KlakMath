@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Burst;
+using Unity.Mathematics;
 using Klak.Math;
 using Klak.Util;
 using System;
@@ -10,23 +11,22 @@ sealed class NoiseGraph1D : MonoBehaviour
 {
     [SerializeField] uint _seed = 100;
     [SerializeField] float _frequency = 1;
-    [SerializeField, Range(0, 10)] uint _octaves = 0;
+    [SerializeField, Range(1, 10)] int _octaves = 1;
     [SerializeField] int _resolution = 256;
     [SerializeField] Material _material = null;
 
-    Mesh _mesh;
     Vector3[] _vertices;
+    Mesh _mesh;
 
     void Start()
     {
-        _vertices = new Vector3[_resolution];
-
         var indices = Enumerable.Range(0, _resolution).ToArray();
+
+        _vertices = new Vector3[_resolution];
 
         _mesh = new Mesh();
         _mesh.SetVertices(_vertices);
         _mesh.SetIndices(indices, MeshTopology.LineStrip, 0);
-        _mesh.bounds = new Bounds(Vector3.zero, Vector3.one);
     }
 
     void OnDestroy()
@@ -35,13 +35,7 @@ sealed class NoiseGraph1D : MonoBehaviour
     void Update()
     {
         var span = new Span<Vector3>(_vertices).GetUntyped();
-        var t = Time.time;
-
-        if (_octaves > 0)
-            UpdateVerticesFractal(span, _frequency, _octaves, t, _seed);
-        else
-            UpdateVertices(span, _frequency, t, _seed);
-
+        UpdateVertices(span, _frequency, _octaves, Time.time, _seed);
         _mesh.SetVertices(_vertices);
 
         var rparams = new RenderParams(_material);
@@ -49,28 +43,16 @@ sealed class NoiseGraph1D : MonoBehaviour
     }
 
     [BurstCompile]
-    static void UpdateVerticesFractal
-      (in UntypedSpan buffer, float freq, uint octaves, float time, uint seed)
-    {
-        var span = buffer.GetTyped<Vector3>();
-        for (var i = 0; i < span.Length; i++)
-        {
-            var x = i * 2.0f / (span.Length - 1) - 1;
-            var y = Noise.Fractal((x + time) * freq, (int)octaves, seed);
-            span[i] = new Vector3(x, y, 0);
-        }
-    }
-
-    [BurstCompile]
     static void UpdateVertices
-      (in UntypedSpan buffer, float freq, float time, uint seed)
+      (in UntypedSpan buffer, float freq, int oct, float time, uint seed)
     {
-        var span = buffer.GetTyped<Vector3>();
+        var span = buffer.GetTyped<float3>();
+
         for (var i = 0; i < span.Length; i++)
         {
-            var x = i * 2.0f / (span.Length - 1) - 1;
-            var y = Noise.Float((x + time) * freq, seed);
-            span[i] = new Vector3(x, y, 0);
+            var x = math.remap(0, span.Length - 1, -1, 1, i);
+            var y = Noise.Fractal((x + time) * freq, oct, seed);
+            span[i] = math.float3(x, y, 0);
         }
     }
 }
