@@ -34,7 +34,7 @@ sealed class NoiseGraph1D : MonoBehaviour
 
     void Update()
     {
-        var span = new Span<Vector3>(_vertices).GetUntyped();
+        var span = new Span<Vector3>(_vertices).GetRawSpan();
         UpdateVertices(span, _frequency, _octaves, Time.time, _seed);
         _mesh.SetVertices(_vertices);
 
@@ -44,10 +44,9 @@ sealed class NoiseGraph1D : MonoBehaviour
 
     [BurstCompile]
     static void UpdateVertices
-      (in UntypedSpan buffer, float freq, int oct, float time, uint seed)
+      (in RawSpan<Vector3> buffer, float freq, int oct, float time, uint seed)
     {
-        var span = buffer.GetTyped<float3>();
-
+        var span = buffer.Span;
         for (var i = 0; i < span.Length; i++)
         {
             var x = math.remap(0, span.Length - 1, -1, 1, i);

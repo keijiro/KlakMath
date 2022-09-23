@@ -34,7 +34,7 @@ sealed class NoiseGraph2D : MonoBehaviour
 
     void Update()
     {
-        var span = new Span<Vector3>(_vertices).GetUntyped();
+        var span = new Span<Vector3>(_vertices).GetRawSpan();
         var hash = new XXHash(_seed + 0x100000);
         var freq = hash.Float2(0.9f, 1.1f, 0) * _frequency;
         UpdateVertices(span, freq, _octaves, Time.time + 10, _seed);
@@ -46,9 +46,9 @@ sealed class NoiseGraph2D : MonoBehaviour
 
     [BurstCompile]
     static void UpdateVertices
-      (in UntypedSpan buffer, in float2 freq, int oct, float time, uint seed)
+      (in RawSpan<Vector3> buffer, in float2 freq, int oct, float time, uint seed)
     {
-        var span = buffer.GetTyped<float3>();
+        var span = buffer.Span;
         for (var i = 0; i < span.Length; i++)
         {
             var x = math.remap(0, span.Length - 1, -1, 1, i);
