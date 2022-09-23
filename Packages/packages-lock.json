@@ -25,10 +25,11 @@
       }
     },
     "jp.keijiro.klak.util": {
-      "version": "file:jp.keijiro.klak.util",
+      "version": "1.0.0",
       "depth": 0,
-      "source": "embedded",
-      "dependencies": {}
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://registry.npmjs.com"
     },
     "jp.keijiro.test-assets": {
       "version": "1.0.1",
