@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Klak.Util {
 
-public static class SafeObject
+public static class ObjectUtil
 {
     public static T TryDestroy<T>(T o) where T : Object
     {

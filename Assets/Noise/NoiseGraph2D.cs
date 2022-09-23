@@ -30,7 +30,7 @@ sealed class NoiseGraph2D : MonoBehaviour
     }
 
     void OnDestroy()
-      => _mesh = SafeObject.TryDestroy(_mesh);
+      => _mesh = ObjectUtil.TryDestroy(_mesh);
 
     void Update()
     {
