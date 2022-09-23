@@ -18,26 +18,31 @@ sealed class TweenTest : MonoBehaviour
     System.Collections.IEnumerator Start()
     {
         var hash = new XXHash(_seed);
-        var wait = new WaitForSeconds(_interval);
         for (var i = 0u;;)
         {
             _target.p = hash.InSphere(i++) * _radius;
             _target.r = hash.Rotation(i++);
-            yield return wait;
+            yield return new WaitForSeconds(_interval);
         }
     }
 
     void Update()
     {
+        var p = transform.localPosition;
+        var r = transform.localRotation;
+
         if (_type == TweenType.Exp)
         {
-            transform.localPosition = ExpTween.Step(transform.localPosition, _target.p, _speed);
-            transform.localRotation = ExpTween.Step(transform.localRotation, _target.r, _speed);
+            p = ExpTween.Step(p, _target.p, _speed);
+            r = ExpTween.Step(r, _target.r, _speed);
         }
         else
         {
-            (transform.localPosition, _velocity.p) = CdsTween.Step((transform.localPosition, _velocity.p), _target.p, _speed);
-            (transform.localRotation, _velocity.r) = CdsTween.Step((transform.localRotation, _velocity.r), _target.r, _speed);
+            (p, _velocity.p) = CdsTween.Step((p, _velocity.p), _target.p, _speed);
+            (r, _velocity.r) = CdsTween.Step((r, _velocity.r), _target.r, _speed);
         }
+
+        transform.localPosition = p;
+        transform.localRotation = r;
     }
 }

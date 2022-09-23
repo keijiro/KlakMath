@@ -1,3 +1,5 @@
+// Rotation helper functions
+
 using Unity.Mathematics;
 
 namespace Klak.Math {

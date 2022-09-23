@@ -1,4 +1,4 @@
-// XXHash deterministic random number generator
+// XXHash as a deterministic random number generator
 
 using Unity.Mathematics;
 
@@ -6,236 +6,142 @@ namespace Klak.Math {
 
 public readonly struct XXHash
 {
-    #region Public members
+    #region Base interface
 
     public uint Seed { get; }
 
-    public XXHash(uint seed)
-      => Seed = seed;
+    public XXHash(uint seed) => Seed = seed;
 
-    // bool
+    #endregion
 
-    public bool Bool(uint data)
-      => (CalculateHash(data, Seed) & 1) != 0;
+    #region UInt: Full range
 
-    // uint
+    public uint  UInt (uint  data) => CalculateHash(data, Seed);
+    public uint2 UInt2(uint2 data) => CalculateHash(data, (uint2)Seed);
+    public uint3 UInt3(uint3 data) => CalculateHash(data, (uint3)Seed);
+    public uint4 UInt4(uint4 data) => CalculateHash(data, (uint4)Seed);
 
-    public uint UInt(uint data)
-      => CalculateHash(data, Seed);
+    #endregion
 
-    public uint UInt(uint max, uint data)
-      => math.select(0u, UInt(data) % max, max > 0u);
+    #region UInt: Single seed support
 
-    public uint UInt(uint min, uint max, uint data)
-      => UInt(max - min, data) + min;
+    public uint2 UInt2(uint data) => UInt2(math.uint2(data, data + 0x10000000));
+    public uint3 UInt3(uint data) => UInt3(math.uint3(data, data + 0x10000000, data + 0x20000000));
+    public uint4 UInt4(uint data) => UInt4(math.uint4(data, data + 0x10000000, data + 0x20000000, data + 0x30000000));
 
-    // uint2
+    #endregion
 
-    public uint2 UInt2(uint2 data)
-      => CalculateHash(data, (uint2)Seed);
+    #region UInt: (0 - Max) range
 
-    public uint2 UInt2(uint data)
-      => UInt2(math.uint2(data, data + 0x10000000));
+    public uint  UInt (uint max, uint  data) => math.select(0u, UInt (data) % max, max > 0u);
+    public uint2 UInt2(uint max, uint2 data) => math.select(0u, UInt2(data) % max, max > 0u);
+    public uint2 UInt2(uint max, uint  data) => math.select(0u, UInt2(data) % max, max > 0u);
+    public uint3 UInt3(uint max, uint3 data) => math.select(0u, UInt3(data) % max, max > 0u);
+    public uint3 UInt3(uint max, uint  data) => math.select(0u, UInt3(data) % max, max > 0u);
+    public uint4 UInt4(uint max, uint4 data) => math.select(0u, UInt4(data) % max, max > 0u);
+    public uint4 UInt4(uint max, uint  data) => math.select(0u, UInt4(data) % max, max > 0u);
 
-    public uint2 UInt2(uint max, uint2 data)
-      => math.select(0u, UInt2(data) % max, max > 0u);
+    #endregion
 
-    public uint2 UInt2(uint max, uint data)
-      => math.select(0u, UInt2(data) % max, max > 0u);
+    #region UInt: (Min - Max) range
 
-    public uint2 UInt2(uint min, uint max, uint2 data)
-      => UInt2(max - min, data) + min;
+    public uint  UInt (uint min, uint max, uint  data) => UInt (max - min, data) + min;
+    public uint2 UInt2(uint min, uint max, uint2 data) => UInt2(max - min, data) + min;
+    public uint2 UInt2(uint min, uint max, uint  data) => UInt2(max - min, data) + min;
+    public uint3 UInt3(uint min, uint max, uint3 data) => UInt3(max - min, data) + min;
+    public uint3 UInt3(uint min, uint max, uint  data) => UInt3(max - min, data) + min;
+    public uint4 UInt4(uint min, uint max, uint4 data) => UInt4(max - min, data) + min;
+    public uint4 UInt4(uint min, uint max, uint  data) => UInt4(max - min, data) + min;
 
-    public uint2 UInt2(uint min, uint max, uint data)
-      => UInt2(max - min, data) + min;
+    #endregion
 
-    // uint3
+    #region Bool methods
 
-    public uint3 UInt3(uint3 data)
-      => CalculateHash(data, (uint3)Seed);
+    public bool  Bool (uint  data) => (UInt (data) & 1) != 0;
+    public bool2 Bool2(uint2 data) => (UInt2(data) & 1) != 0;
+    public bool2 Bool2(uint  data) => (UInt2(data) & 1) != 0;
+    public bool3 Bool3(uint3 data) => (UInt3(data) & 1) != 0;
+    public bool3 Bool3(uint  data) => (UInt3(data) & 1) != 0;
+    public bool4 Bool4(uint4 data) => (UInt4(data) & 1) != 0;
+    public bool4 Bool4(uint  data) => (UInt4(data) & 1) != 0;
 
-    public uint3 UInt3(uint data)
-      => UInt3(math.uint3(data, data + 0x10000000, data + 0x20000000));
+    #endregion
 
-    public uint3 UInt3(uint max, uint3 data)
-      => math.select(0u, UInt3(data) % max, max > 0u);
+    #region Int: Full range
 
-    public uint3 UInt3(uint max, uint data)
-      => math.select(0u, UInt3(data) % max, max > 0u);
+    public int  Int (uint  data) => (int) UInt (data);
+    public int2 Int2(uint  data) => (int2)UInt2(data);
+    public int2 Int2(uint2 data) => (int2)UInt2(data);
+    public int3 Int3(uint  data) => (int3)UInt3(data);
+    public int3 Int3(uint3 data) => (int3)UInt3(data);
+    public int4 Int4(uint  data) => (int4)UInt4(data);
+    public int4 Int4(uint4 data) => (int4)UInt4(data);
 
-    public uint3 UInt3(uint min, uint max, uint3 data)
-      => UInt3(max - min, data) + min;
+    #endregion
 
-    public uint3 UInt3(uint min, uint max, uint data)
-      => UInt3(max - min, data) + min;
+    #region Int: (0 - Max) range
 
-    // uint4
+    public int  Int (int  max, uint  data) => math.select(0, Int (data) % max, max > 0);
+    public int2 Int2(int2 max, uint  data) => math.select(0, Int2(data) % max, max > 0);
+    public int2 Int2(int2 max, uint2 data) => math.select(0, Int2(data) % max, max > 0);
+    public int3 Int3(int3 max, uint  data) => math.select(0, Int3(data) % max, max > 0);
+    public int3 Int3(int3 max, uint3 data) => math.select(0, Int3(data) % max, max > 0);
+    public int4 Int4(int4 max, uint  data) => math.select(0, Int4(data) % max, max > 0);
+    public int4 Int4(int4 max, uint4 data) => math.select(0, Int4(data) % max, max > 0);
 
-    public uint4 UInt4(uint4 data)
-      => CalculateHash(data, (uint4)Seed);
+    #endregion
 
-    public uint4 UInt4(uint data)
-      => UInt4(math.uint4(data,
-                          data + 0x10000000,
-                          data + 0x20000000,
-                          data + 0x30000000));
+    #region Int: (Min - Max) range
 
-    public uint4 UInt4(uint max, uint4 data)
-      => math.select(0u, UInt4(data) % max, max > 0u);
+    public int  Int (int  min, int  max, uint  data) => Int (max - min, data) + min;
+    public int2 Int2(int2 min, int2 max, uint  data) => Int2(max - min, data) + min;
+    public int2 Int2(int2 min, int2 max, uint2 data) => Int2(max - min, data) + min;
+    public int3 Int3(int3 min, int3 max, uint  data) => Int3(max - min, data) + min;
+    public int3 Int3(int3 min, int3 max, uint3 data) => Int3(max - min, data) + min;
+    public int4 Int4(int4 min, int4 max, uint  data) => Int4(max - min, data) + min;
+    public int4 Int4(int4 min, int4 max, uint4 data) => Int4(max - min, data) + min;
 
-    public uint4 UInt4(uint max, uint data)
-      => math.select(0u, UInt4(data) % max, max > 0u);
+    #endregion
 
-    public uint4 UInt4(uint min, uint max, uint4 data)
-      => UInt4(max - min, data) + min;
+    #region Float: Full range
 
-    public uint4 UInt4(uint min, uint max, uint data)
-      => UInt4(max - min, data) + min;
+    public float  Float (uint  data) =>         UInt (data) / (float)uint.MaxValue;
+    public float2 Float2(uint  data) => (float2)UInt2(data) / (float)uint.MaxValue;
+    public float2 Float2(uint2 data) => (float2)UInt2(data) / (float)uint.MaxValue;
+    public float3 Float3(uint  data) => (float3)UInt3(data) / (float)uint.MaxValue;
+    public float3 Float3(uint3 data) => (float3)UInt3(data) / (float)uint.MaxValue;
+    public float4 Float4(uint  data) => (float4)UInt4(data) / (float)uint.MaxValue;
+    public float4 Float4(uint4 data) => (float4)UInt4(data) / (float)uint.MaxValue;
 
-    // int
+    #endregion
 
-    public int Int(uint data)
-      => (int)UInt(data);
+    #region Float: (0 - Max) range
 
-    public int Int(int max, uint data)
-      => math.select(0, Int(data) % max, max > 0);
+    public float  Float (float  max, uint  data) => Float (data) * max;
+    public float2 Float2(float2 max, uint  data) => Float2(data) * max;
+    public float2 Float2(float2 max, uint2 data) => Float2(data) * max;
+    public float3 Float3(float3 max, uint  data) => Float3(data) * max;
+    public float3 Float3(float3 max, uint3 data) => Float3(data) * max;
+    public float4 Float4(float4 max, uint  data) => Float4(data) * max;
+    public float4 Float4(float4 max, uint4 data) => Float4(data) * max;
 
-    public int Int(int min, int max, uint data)
-      => Int(max - min, data) + min;
+    #endregion
 
-    // int2
+    #region Float: (Min - Max) range
 
-    public int2 Int2(uint data)
-      => (int2)UInt2(data);
+    public float  Float (float  min, float  max, uint  data) => Float (data) * (max - min) + min;
+    public float2 Float2(float2 min, float2 max, uint  data) => Float2(data) * (max - min) + min;
+    public float2 Float2(float2 min, float2 max, uint2 data) => Float2(data) * (max - min) + min;
+    public float3 Float3(float3 min, float3 max, uint  data) => Float3(data) * (max - min) + min;
+    public float3 Float3(float3 min, float3 max, uint3 data) => Float3(data) * (max - min) + min;
+    public float4 Float4(float4 min, float4 max, uint  data) => Float4(data) * (max - min) + min;
+    public float4 Float4(float4 min, float4 max, uint4 data) => Float4(data) * (max - min) + min;
 
-    public int2 Int2(uint2 data)
-      => (int2)UInt2(data);
+    #endregion
 
-    public int2 Int2(int2 max, uint data)
-      => math.select(0, Int2(data) % max, max > 0);
-
-    public int2 Int2(int2 max, uint2 data)
-      => math.select(0, Int2(data) % max, max > 0);
-
-    public int2 Int2(int2 min, int2 max, uint data)
-      => Int2(max - min, data) + min;
-
-    public int2 Int2(int2 min, int2 max, uint2 data)
-      => Int2(max - min, data) + min;
-
-    // int3
-
-    public int3 Int3(uint data)
-      => (int3)UInt3(data);
-
-    public int3 Int3(uint3 data)
-      => (int3)UInt3(data);
-
-    public int3 Int3(int3 max, uint data)
-      => math.select(0, Int3(data) % max, max > 0);
-
-    public int3 Int3(int3 max, uint3 data)
-      => math.select(0, Int3(data) % max, max > 0);
-
-    public int3 Int3(int3 min, int3 max, uint data)
-      => Int3(max - min, data) + min;
-
-    public int3 Int3(int3 min, int3 max, uint3 data)
-      => Int3(max - min, data) + min;
-
-    // int4
-
-    public int4 Int4(uint data)
-      => (int4)UInt4(data);
-
-    public int4 Int4(uint4 data)
-      => (int4)UInt4(data);
-
-    public int4 Int4(int4 max, uint data)
-      => math.select(0, Int4(data) % max, max > 0);
-
-    public int4 Int4(int4 max, uint4 data)
-      => math.select(0, Int4(data) % max, max > 0);
-
-    public int4 Int4(int4 min, int4 max, uint data)
-      => Int4(max - min, data) + min;
-
-    public int4 Int4(int4 min, int4 max, uint4 data)
-      => Int4(max - min, data) + min;
-
-    // float
-
-    public float Float(uint data)
-      => UInt(data) / (float)uint.MaxValue;
-
-    public float Float(float max, uint data)
-      => Float(data) * max;
-
-    public float Float(float min, float max, uint data)
-      => Float(data) * (max - min) + min;
-
-    // float2
-
-    public float2 Float2(uint data)
-      => (float2)UInt2(data) / (float)uint.MaxValue;
-
-    public float2 Float2(uint2 data)
-      => (float2)UInt2(data) / (float)uint.MaxValue;
-
-    public float2 Float2(float2 max, uint data)
-      => Float2(data) * max;
-
-    public float2 Float2(float2 max, uint2 data)
-      => Float2(data) * max;
-
-    public float2 Float2(float2 min, float2 max, uint data)
-      => Float2(data) * (max - min) + min;
-
-    public float2 Float2(float2 min, float2 max, uint2 data)
-      => Float2(data) * (max - min) + min;
-
-    // float3
-
-    public float3 Float3(uint data)
-      => (float3)UInt3(data) / (float)uint.MaxValue;
-
-    public float3 Float3(uint3 data)
-      => (float3)UInt3(data) / (float)uint.MaxValue;
-
-    public float3 Float3(float3 max, uint data)
-      => Float3(data) * max;
-
-    public float3 Float3(float3 max, uint3 data)
-      => Float3(data) * max;
-
-    public float3 Float3(float3 min, float3 max, uint data)
-      => Float3(data) * (max - min) + min;
-
-    public float3 Float3(float3 min, float3 max, uint3 data)
-      => Float3(data) * (max - min) + min;
-
-    // float4
-
-    public float4 Float4(uint data)
-      => (float4)UInt4(data) / (float)uint.MaxValue;
-
-    public float4 Float4(uint4 data)
-      => (float4)UInt4(data) / (float)uint.MaxValue;
-
-    public float4 Float4(float4 max, uint data)
-      => Float4(data) * max;
-
-    public float4 Float4(float4 max, uint4 data)
-      => Float4(data) * max;
-
-    public float4 Float4(float4 min, float4 max, uint data)
-      => Float4(data) * (max - min) + min;
-
-    public float4 Float4(float4 min, float4 max, uint4 data)
-      => Float4(data) * (max - min) + min;
+    #region Geometric utilities
 
     // On unit circle
-
     public float2 OnCircle(uint data)
     {
         var phi = Float(math.PI * 2, data);
@@ -243,12 +149,10 @@ public readonly struct XXHash
     }
 
     // Inside unit circle
-
     public float2 InCircle(uint data)
       => OnCircle(data) * math.sqrt(Float(data + 0x10000000));
 
     // On unit sphere
-
     public float3 OnSphere(uint data)
     {
         var phi = Float(math.PI * 2, data);
@@ -258,12 +162,10 @@ public readonly struct XXHash
     }
 
     // Inside unit sphere
-
     public float3 InSphere(uint data)
       => OnSphere(data) * math.pow(Float(data + 0x20000000), 1.0f / 3);
 
     // Rotation
-
     public quaternion Rotation(uint data)
     {
         var u1 = Float(data);
@@ -280,8 +182,7 @@ public readonly struct XXHash
 
     #region Public class members
 
-    static XXHash RandomHash
-      => new XXHash(XXHash.CalculateHash(0xcafe, _counter++));
+    static XXHash RandomHash => new XXHash(XXHash.CalculateHash(0xcafe, _counter++));
 
     static uint CalculateHash(uint data, uint seed)
     {
