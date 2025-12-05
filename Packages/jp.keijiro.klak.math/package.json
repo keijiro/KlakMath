@@ -1,6 +1,6 @@
 {
   "name": "jp.keijiro.klak.math",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "displayName": "KlakMath",
   "description": "Extension library for Unity Mathematics.",
   "unity": "2022.3",
@@ -10,5 +10,5 @@
   "documentationUrl": "https://github.com/keijiro/KlakMath",
   "licensesUrl": "https://github.com/keijiro/KlakMath/blob/master/LICENSE",
   "license": "Unlicense",
-  "_upm": { "changelog": "" }
+  "_upm": { "changelog": "<b>Added</b><br>- Added signing for Unity 6.3." }
 }
