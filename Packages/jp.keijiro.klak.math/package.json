@@ -1,13 +1,14 @@
 {
-    "author": "Keijiro Takahashi",
-    "dependencies": { "com.unity.mathematics": "1.2.6" },
-    "description": "Extension library for Unity Mathematics.",
-    "displayName": "KlakMath",
-    "keywords": [ "unity" ],
-    "license": "Unlicense",
-    "name": "jp.keijiro.klak.math",
-    "repository": "github:keijiro/KlakMath",
-    "unity": "2021.3",
-    "unityRelease": "0f1", 
-    "version": "2.1.0"
+  "name": "jp.keijiro.klak.math",
+  "version": "2.1.0",
+  "displayName": "KlakMath",
+  "description": "Extension library for Unity Mathematics.",
+  "unity": "2022.3",
+  "author": "Keijiro Takahashi",
+  "dependencies": { "com.unity.mathematics": "1.2.6" },
+  "changelogUrl": "https://github.com/keijiro/KlakMath/blob/master/CHANGELOG.md",
+  "documentationUrl": "https://github.com/keijiro/KlakMath",
+  "licensesUrl": "https://github.com/keijiro/KlakMath/blob/master/LICENSE",
+  "license": "Unlicense",
+  "_upm": { "changelog": "" }
 }
